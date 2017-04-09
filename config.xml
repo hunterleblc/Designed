@@ -7,7 +7,9 @@
     <author email="support@phonegap.com" href="http://phonegap.com">
         PhoneGap Team
     </author>
+    <preference  name="phonegap-version"  value= "3.7.0"  />
     <gap:plugin name="cordova-plugin-whitelist" source="npm" />
+    <gap:plugin  name="org.apache.cordova.dialogs" source="npm" ></gap:plugin>
     <plugin name="com.phonegap.plugins.barcodescanner" spec="1.1.0" source="pgb" />
     <content src="index.html" />
     <access origin="*" />
