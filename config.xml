@@ -7,7 +7,7 @@
     <author email="support@phonegap.com" href="http://phonegap.com">
         PhoneGap Team
     </author>
-    <plugin name="net.roughshod.plugins.barcodescanner" spec="3.0.0" source="pgb" />
+    <plugin name="com.phonegap.plugins.barcodescanner" spec="1.1.0" source="pgb" />
     <content src="index.html" />
     <access origin="*" />
 </widget>
