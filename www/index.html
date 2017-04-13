@@ -10,6 +10,72 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/skel.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="http://dev.davenportwalk.com/testing/json/var.js"></script>
+        <script type="text/javascript">
+        	$( document ).ready(function() 
+        	{
+    			console.log( "ready!" );
+				var TrailList_ul = '';
+				for (var i = 0, len = TrailName.length; i < len; i++) 
+				{
+   					TrailList_ul+= "<a href='#Template' onclick='displayTrail("+i+")'><li>"+TrailName[i]+"</li></a>";
+ 				}
+					$("ul#TrailList").html(TrailList_ul);
+				});
+				function displayTrail(index)
+				{
+					document.getElementById('TemplateHead').innerHTML = TrailName[index];
+					document.getElementById('TemplateContent').innerHTML = TrailContent[index];
+					var location=Locations[0];
+					var additional="";
+					for (var T = 0, len = Locations.length; T < len; T++)
+					{
+						location=Locations[T];
+						if(location[0]==index)
+						{
+							additional+="<a href='#Template' onclick='displayLocation("+location[0]+","+location[location.length-1]+")'><li>"+LocationName[location[location.length-1]]+"</li></a>";
+						}
+					}
+					document.getElementById('TemplateImage').innerHTML = "<img src='"+TrailURL[index]+"' />";
+					document.getElementById('TemplateList').innerHTML = additional;
+				}
+				function displayLocation(index, index2)
+				{
+					document.getElementById('TemplateHead').innerHTML = LocationName[index2];
+					document.getElementById('TemplateContent').innerHTML = LocationContent[index2];
+					var location=Locations[0];
+					var additionalLocations="<a href='#Template' onclick='displayTrail("+index+")'><li>"+TrailName[index]+"</li></a>";
+					for (var T = 0, len = Locations.length; T < len; T++)
+					{
+						location=Locations[T];
+						if(location[0]==index && !(location[location.length-1]== index2))
+						{
+							
+							additionalLocations+="<a href='#Template' onclick='displayLocation("+location[0]+","+location[location.length-1]+")'><li>"+LocationName[location[location.length-1]]+"</li></a>";
+							
+						}
+					}
+					document.getElementById('TemplateImage').innerHTML = "<img src='"+LocationURL[index2]+"' />";
+					document.getElementById('TemplateList').innerHTML = additionalLocations;
+				}
+        		function scan()
+        		{
+        			cordova.plugins.barcodeScanner.scan(
+      				function (result) 
+      				{
+          				document.getElementById('TemplateHead').innerHTML =Trail1.name[result.text];
+      				}, 
+      				function (error) {
+          				alert("Scanning failed: " + error);
+      				});
+        		}
+        </script>
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	</head>
@@ -46,46 +112,27 @@
 						<!-- Home -->
 							<article id="Home">
 								<h2 class="major">Home</h2>
-								<span class="image main"><img src="images/pic01.jpg" alt="" /></span>
+								<span class="image main"><img src="http://for.unipi.it/stefano_garzarella/files/2014/11/Work-in-progress-1024x603.png" alt="" /></span>
 								<!-- real button code 
 								<button ontouchend="scan();" id="scann">Scan QR</button>
 								-->
-								<a href="#Template"><button onclick="scan();">Scan QR Code</button></a>
-								
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript">
-        function scan(){
-        	cordova.plugins.barcodeScanner.scan(
-      function (result) {
-          document.getElementById('TemplateHead').innerHTML =TrailName[result.text];
-      }, 
-      function (error) {
-          alert("Scanning failed: " + error);
-      }
-   );
-        }
-        </script>
+								<p>This is the Home page for our application. Thank you for checking it out. Currently the scan button does not work, please go to the previouse page by clicking the X and use the TRAILS button to view the rest of the app.</p>
+								<a href=""><button onclick="alert(trail1[0].name);">Scan QR Code</button></a>
 							</article>
 
 						<!-- Trails -->
 							<article id="Trails">
 								<h2 class="major">Trails</h2>
-								<span class="image main"><img src="images/pic02.jpg" alt="" /></span>
-								<ul>
-									<li>trail 1</li>
-									<li>trail 2</li>
-									<li>trail 3</li>
-									<li>trail 4</li>
+								<span class="image main"><img src="http://www.americantrails.org/i/resourceimages/High-Trestle-Iowa08.jpg" alt="" /></span>
+								<ul id = "TrailList">
 								</ul>
 							</article>
-
 						<!-- About -->
 							<article id="about">
 								<h2 class="major">About</h2>
-								<span class="image main"><img src="images/pic03.jpg" alt="" /></span>
+								<span class="image main"><img src="http://sota1.files.wordpress.com/2011/10/about.jpg" alt="" /></span>
 								<p>This Davenport Walks Application was the outcome of the DDI class and those who were involved. We give thanks to Mr. Stewart and Mrs. Tate who were a huge help in our project. <br><br>Coded by Hunter LeBlanc</p>
 							</article>
-
 						<!-- Contact -->
 							<article id="contact">
 								<h2 class="major">Contact</h2>
@@ -117,68 +164,17 @@
 							</article>
 							<!--Template Page-->
 							<article id="Template">
-							<script type="text/javascript" src="http://dev.davenportwalk.com/testing/json/var.js"></script>
 								<h2 class="major" id="TemplateHead">Template</h2>
-								<span class="image main"><img src="images/pic01.jpg" alt="" /></span>
+								<span class = "image main" id="TemplateImage"><img src="images/pic01.jpg" alt="" /></span>
+								<p id="TemplateContent"></p>
+								<ul id="TemplateList"></ul>
 							</article>
 
 						<!-- Elements -->
 							<article id="elements">
 								<h2 class="major">Elements</h2>
-
 								<section>
-									<h3 class="major">Text</h3>
-									<p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
-									This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
-									This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.</p>
-									<hr />
-									<h2>Heading Level 2</h2>
-									<h3>Heading Level 3</h3>
-									<h4>Heading Level 4</h4>
-									<h5>Heading Level 5</h5>
-									<h6>Heading Level 6</h6>
-									<hr />
-									<h4>Blockquote</h4>
-									<blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan faucibus. Vestibulum ante ipsum primis in faucibus lorem ipsum dolor sit amet nullam adipiscing eu felis.</blockquote>
-									<h4>Preformatted</h4>
-									<pre><code>i = 0;
-
-while (!deck.isInOrder()) {
-    print 'Iteration ' + i;
-    deck.shuffle();
-    i++;
-}
-
-print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
-								</section>
-
-								<section>
-									<h3 class="major">Lists</h3>
-
-									<h4>Unordered</h4>
-									<ul>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Sagittis adipiscing.</li>
-										<li>Felis enim feugiat.</li>
-									</ul>
-
-									<h4>Alternate</h4>
-									<ul class="alt">
-										<li>Dolor pulvinar etiam.</li>
-										<li>Sagittis adipiscing.</li>
-										<li>Felis enim feugiat.</li>
-									</ul>
-
-									<h4>Ordered</h4>
-									<ol>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Etiam vel felis viverra.</li>
-										<li>Felis enim feugiat.</li>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Etiam vel felis lorem.</li>
-										<li>Felis enim et feugiat.</li>
-									</ol>
-									<h4>Icons</h4>
+			
 									<ul class="icons">
 										<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
 										<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
@@ -196,102 +192,6 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 										<li><a href="#" class="button">Default</a></li>
 									</ul>
 								</section>
-
-								<section>
-									<h3 class="major">Table</h3>
-									<h4>Default</h4>
-									<div class="table-wrapper">
-										<table>
-											<thead>
-												<tr>
-													<th>Name</th>
-													<th>Description</th>
-													<th>Price</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Item One</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Two</td>
-													<td>Vis ac commodo adipiscing arcu aliquet.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Three</td>
-													<td> Morbi faucibus arcu accumsan lorem.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Four</td>
-													<td>Vitae integer tempus condimentum.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Five</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-											</tbody>
-											<tfoot>
-												<tr>
-													<td colspan="2"></td>
-													<td>100.00</td>
-												</tr>
-											</tfoot>
-										</table>
-									</div>
-
-									<h4>Alternate</h4>
-									<div class="table-wrapper">
-										<table class="alt">
-											<thead>
-												<tr>
-													<th>Name</th>
-													<th>Description</th>
-													<th>Price</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Item One</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Two</td>
-													<td>Vis ac commodo adipiscing arcu aliquet.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Three</td>
-													<td> Morbi faucibus arcu accumsan lorem.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Four</td>
-													<td>Vitae integer tempus condimentum.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Five</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-											</tbody>
-											<tfoot>
-												<tr>
-													<td colspan="2"></td>
-													<td>100.00</td>
-												</tr>
-											</tfoot>
-										</table>
-									</div>
-								</section>
-
 								<section>
 									<h3 class="major">Buttons</h3>
 									<ul class="actions">
@@ -377,10 +277,7 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 			<div id="bg"></div>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+
 
 	</body>
 </html>
